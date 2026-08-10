@@ -1,0 +1,13 @@
+# 构建上下文瘦身 + 密钥隔离（适用于 nginx 全仓上下文）
+node_modules
+dist
+build
+.git
+.env
+.env.local
+logs
+*.log
+coverage
+.DS_Store
+Thumbs.db
+~$*

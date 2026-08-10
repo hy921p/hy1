@@ -1,0 +1,85 @@
+# AI 智面平台 · 生产编排（MySQL + Qdrant + 后端 + nginx 网关）
+# 用法：
+#   1) cp .env.example .env 并按需修改（AI_API_KEY 必填）
+#   2) docker compose up -d --build
+#   3) 访问 http://<服务器IP>/  （C 端），http://<服务器IP>/admin/（管理端，账号 admin/admin123）
+#   4) HTTPS：docker compose exec nginx sh -c "apk add certbot certbot-nginx && certbot --nginx -d 你的域名"
+#
+# 迁移/种子在 server 容器首次启动时自动执行（幂等），无需手动操作。
+# 向量库：VECTOR_MODE=qdrant 走 Qdrant（生产推荐）；想省资源可改为 mysql（JSON 列 + JS 余弦）。
+
+version: "3.8"
+
+services:
+  mysql:
+    image: mysql:8.0
+    restart: unless-stopped
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-123456}
+      MYSQL_DATABASE: ${DB_NAME:-ai_interview_coach}
+    volumes:
+      - mysql-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-p${MYSQL_ROOT_PASSWORD:-123456}"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+
+  qdrant:
+    image: qdrant/qdrant:v1.9.0
+    restart: unless-stopped
+    volumes:
+      - qdrant-data:/qdrant/storage
+
+  server:
+    build: ./server
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_USER: root
+      DB_PASSWORD: ${MYSQL_ROOT_PASSWORD:-123456}
+      DB_NAME: ${DB_NAME:-ai_interview_coach}
+      JWT_SECRET: ${JWT_SECRET:-change-me-jwt-secret}
+      ADMIN_JWT_SECRET: ${ADMIN_JWT_SECRET:-change-me-admin-secret}
+      CORS_ORIGIN: ${CORS_ORIGIN:-*}
+      AI_API_KEY: ${AI_API_KEY:?请在 .env 配置 AI_API_KEY}
+      AI_BASE_URL: ${AI_BASE_URL:-https://api.deepseek.com}
+      AI_MODEL: ${AI_MODEL:-deepseek-chat}
+      AI_TIMEOUT: ${AI_TIMEOUT:-60000}
+      AI_MAX_TOKENS: ${AI_MAX_TOKENS:-4096}
+      AI_ENABLED: ${AI_ENABLED:-true}
+      EMBEDDING_MODE: ${EMBEDDING_MODE:-auto}
+      EMBEDDING_BASE_URL: ${EMBEDDING_BASE_URL:-https://dashscope.aliyuncs.com/compatible-mode/v1}
+      EMBEDDING_API_KEY: ${EMBEDDING_API_KEY:-}
+      EMBEDDING_MODEL: ${EMBEDDING_MODEL:-qwen3.7-text-embedding}
+      EMBEDDING_DIM: ${EMBEDDING_DIM:-1024}
+      VECTOR_MODE: ${VECTOR_MODE:-qdrant}
+      QDRANT_URL: http://qdrant:6333
+      QDRANT_COLLECTION: ${QDRANT_COLLECTION:-knowledge}
+      VECTOR_TOP_K: ${VECTOR_TOP_K:-5}
+      AGENT_ENABLED: ${AGENT_ENABLED:-true}
+      AGENT_MAX_TOOL_CALLS: ${AGENT_MAX_TOOL_CALLS:-4}
+    depends_on:
+      mysql:
+        condition: service_healthy
+      qdrant:
+        condition: service_started
+
+  nginx:
+    build:
+      context: .
+      dockerfile: nginx/Dockerfile
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - server
+
+volumes:
+  mysql-data:
+  qdrant-data:

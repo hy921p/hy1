@@ -1,0 +1,25 @@
+# 依赖与构建产物
+node_modules/
+dist/
+build/
+
+# 环境变量与密钥（勿提交真实密钥）
+.env
+.env.local
+*.env.local
+
+# 日志与临时文件
+logs/
+*.log
+/tmp/
+.DS_Store
+Thumbs.db
+
+# 编辑器 / 系统
+.idea/
+.vscode/
+*.swp
+~$*
+
+# 开发/调试临时记录
+server/scripts/_*.txt

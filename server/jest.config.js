@@ -1,0 +1,9 @@
+/**
+ * Jest 测试配置
+ */
+module.exports = {
+  testEnvironment: 'node',
+  testMatch: ['**/__tests__/**/*.test.js'],
+  testTimeout: 10000,
+  verbose: true,
+}
