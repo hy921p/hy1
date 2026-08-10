@@ -81,26 +81,28 @@ async function up() {
   }
 
   // ---------- 2. user_progress 幂等重建 ----------
+  // 旧单行结构（已核实 0 行）：若存在 weekly_scores 列则 DROP 重建为多行结构
   if (await columnExists('user_progress', 'weekly_scores')) {
-    // 旧单行结构（已核实 0 行），安全重建；新结构建立后该守卫恒为 false
     await pool.query('DROP TABLE IF EXISTS user_progress');
-    await pool.query(`
-      CREATE TABLE user_progress (
-        id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-        user_id BIGINT UNSIGNED NOT NULL COMMENT "所属用户",
-        type VARCHAR(20) NOT NULL COMMENT "进度类型 reading/question/course/interview/study_plan",
-        target_id BIGINT DEFAULT NULL COMMENT "目标对象ID（study_plan=节点id）",
-        progress INT NOT NULL DEFAULT 0 COMMENT "进度值 0-100",
-        created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-        updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-        UNIQUE KEY uk_user_type_target (user_id, type, target_id),
-        KEY idx_up_user (user_id, updated_at),
-        KEY idx_up_type_target (type, target_id),
-        CONSTRAINT fk_up_user FOREIGN KEY (user_id) REFERENCES users(id)
-      ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT="学习进度表（多行）"
-    `);
-    console.log('[migration] user_progress 已重建为多行结构');
+    console.log('[migration] user_progress 旧单行结构已删除');
   }
+  // 全新库无该表（或刚删除），统一 IF NOT EXISTS 创建多行结构
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS user_progress (
+      id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+      user_id BIGINT UNSIGNED NOT NULL COMMENT "所属用户",
+      type VARCHAR(20) NOT NULL COMMENT "进度类型 reading/question/course/interview/study_plan",
+      target_id BIGINT DEFAULT NULL COMMENT "目标对象ID（study_plan=节点id）",
+      progress INT NOT NULL DEFAULT 0 COMMENT "进度值 0-100",
+      created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+      updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+      UNIQUE KEY uk_user_type_target (user_id, type, target_id),
+      KEY idx_up_user (user_id, updated_at),
+      KEY idx_up_type_target (type, target_id),
+      CONSTRAINT fk_up_user FOREIGN KEY (user_id) REFERENCES users(id)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT="学习进度表（多行）"
+  `);
+  console.log('[migration] user_progress 已就绪（多行结构）');
 
   // ---------- 3. 新表 ----------
 

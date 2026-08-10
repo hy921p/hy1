@@ -35,6 +35,9 @@ async function up() {
   if (!(await columnExists('users', 'avg_score'))) {
     adds.push('ADD COLUMN avg_score DECIMAL(4,1) DEFAULT NULL COMMENT "平均面试得分" AFTER total_interviews');
   }
+  if (!(await columnExists('users', 'banned_at'))) {
+    adds.push('ADD COLUMN banned_at DATETIME DEFAULT NULL COMMENT "封禁时间（NULL=正常）" AFTER avg_score');
+  }
 
   if (adds.length) {
     await pool.query(`ALTER TABLE users ${adds.join(', ')}`);
