@@ -5,7 +5,7 @@
 FROM node:20-alpine AS web-build
 WORKDIR /app
 COPY web/package.json web/package-lock.json ./web/
-RUN cd web && npm ci
+RUN npm config set registry https://registry.npmmirror.com && cd web && npm ci
 COPY web/ ./web/
 RUN cd web && npm run build
 
@@ -13,7 +13,7 @@ RUN cd web && npm run build
 FROM node:20-alpine AS admin-build
 WORKDIR /app
 COPY admin/package.json admin/package-lock.json ./admin/
-RUN cd admin && npm ci
+RUN npm config set registry https://registry.npmmirror.com && cd admin && npm ci
 COPY admin/ ./admin/
 RUN cd admin && VITE_BASE=/admin/ npm run build
 
