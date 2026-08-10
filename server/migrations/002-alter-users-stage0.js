@@ -29,6 +29,12 @@ async function up() {
   if (!(await columnExists('users', 'last_check_in_at'))) {
     adds.push('ADD COLUMN last_check_in_at DATETIME DEFAULT NULL COMMENT "最近打卡时间" AFTER check_in_streak');
   }
+  if (!(await columnExists('users', 'total_interviews'))) {
+    adds.push('ADD COLUMN total_interviews INT NOT NULL DEFAULT 0 COMMENT "累计面试次数" AFTER last_check_in_at');
+  }
+  if (!(await columnExists('users', 'avg_score'))) {
+    adds.push('ADD COLUMN avg_score DECIMAL(4,1) DEFAULT NULL COMMENT "平均面试得分" AFTER total_interviews');
+  }
 
   if (adds.length) {
     await pool.query(`ALTER TABLE users ${adds.join(', ')}`);
