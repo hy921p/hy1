@@ -185,19 +185,19 @@ Web端/后台 → Axios 拦截器（注入 Token + 岗位地区偏好）→ Expr
 
 ### 3.2 后端
 
-| 技术              | 说明                                                                                      |
-| ----------------- | ----------------------------------------------------------------------------------------- |
-| Node.js + Express | RESTful API 服务框架                                                                      |
-| mysql2            | MySQL 驱动                                                                                |
-| jsonwebtoken      | JWT 签发与校验（C 端 7 天 / 管理端 12 小时）                                              |
-| bcryptjs          | 密码加密                                                                                  |
-| dotenv            | 环境配置管理                                                                              |
-| cors              | 跨域配置                                                                                  |
-| jest + supertest  | 单元测试与接口测试                                                                        |
-| 大模型 SDK        | DeepSeek / OpenAI 兼容接口，统一 `aiService` 封装（流式、超时、限流、工具调用）           |
+| 技术              | 说明                                                         |
+| ----------------- | ------------------------------------------------------------ |
+| Node.js + Express | RESTful API 服务框架                                         |
+| mysql2            | MySQL 驱动                                                   |
+| jsonwebtoken      | JWT 签发与校验（C 端 7 天 / 管理端 12 小时）                 |
+| bcryptjs          | 密码加密                                                     |
+| dotenv            | 环境配置管理                                                 |
+| cors              | 跨域配置                                                     |
+| jest + supertest  | 单元测试与接口测试                                           |
+| 大模型 SDK        | DeepSeek / OpenAI 兼容接口，统一 `aiService` 封装（流式、超时、限流、工具调用） |
 | 向量库            | Qdrant（Docker，开发 / 生产默认）/ Milvus（生产大规模可选）；无 Docker 时 sqlite-vec 降级 |
-| Embedding 模型    | 文本向量化（如 BGE-M3 / text-embedding），统一封装于 `embeddingService`                   |
-| 工具调用          | 大模型 function calling / tool use，支撑 Agent 面试官（V2.0）                             |
+| Embedding 模型    | 文本向量化（如 BGE-M3 / text-embedding），统一封装于 `embeddingService` |
+| 工具调用          | 大模型 function calling / tool use，支撑 Agent 面试官（V2.0） |
 
 ---
 
