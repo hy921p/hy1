@@ -6,8 +6,7 @@
 #   4) HTTPS：docker compose exec nginx sh -c "apk add certbot certbot-nginx && certbot --nginx -d 你的域名"
 #
 # 迁移/种子在 server 容器首次启动时自动执行（幂等），无需手动操作。
-# 向量库：VECTOR_MODE=qdrant 走 Qdrant（生产推荐，需 4G+ 内存）；低配服务器（2G）改为 mysql（JSON 列 + JS 余弦）。
-# 部署适配（2G 内存）：默认已移除 qdrant 服务，VECTOR_MODE 在 .env 里设为 mysql。
+# 向量库：VECTOR_MODE=qdrant 走 Qdrant（生产推荐）；想省资源可改为 mysql（JSON 列 + JS 余弦）。
 
 version: "3.8"
 
@@ -26,6 +25,7 @@ services:
       interval: 10s
       timeout: 5s
       retries: 12
+
 
   server:
     build: ./server
@@ -61,7 +61,7 @@ services:
     depends_on:
       mysql:
         condition: service_healthy
-
+    
   nginx:
     build:
       context: .
