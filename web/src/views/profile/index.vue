@@ -9,6 +9,7 @@ const user = ref<any>(null)
 const loading = ref(false)
 
 const entries = [
+  { icon: '🗺️', label: '智能规划', path: '/profile/plan' },
   { icon: '📊', label: '学习报告', path: '/profile/report' },
   { icon: '🧭', label: '能力评估', path: '/profile/assessment' },
   { icon: '🏅', label: '勋章墙', path: '/profile/badges' },

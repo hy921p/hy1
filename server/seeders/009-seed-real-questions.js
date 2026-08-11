@@ -1,10 +1,12 @@
 /**
- * 009 种子：真实公务员结构化面试真题（对外公开服务·真实题库）
+ * 009 种子：结构化面试题库（对外公开服务·诚实标注）
  * 题目来源：历年国考/省考结构化面试公开真题（考生回忆公开版）+ 公开真题解析，
  *           仅收录题干与参考答案要点，不收录任何机构付费内容。
  * 幂等：按题目 content 逐题去重（已存在则跳过），可重复执行。
- * 标记：source_type='real'（真题），题型码与 001 种子一致：
- *       1社会现象 2态度观点 3组织管理 4应急应变 5人际关系 6情景模拟 7自我认知
+ * 标记规则（与 fix-source-types.js 一致）：
+ *   - 仅题干含「海关」的 2 道已溯源真题 → source_type='real'，tags ['真题']
+ *   - 其余不可溯源题目 → source_type='mock'，tags ['模拟题']
+ * 题型码：1社会现象 2态度观点 3组织管理 4应急应变 5人际关系 6情景模拟 7自我认知
  */
 const { pool } = require('../models');
 
@@ -149,13 +151,15 @@ async function seed() {
       'type, difficulty, reference_answer, tags, usage_count, avg_score, status, created_by, deleted_at, operated_by) ' +
       'VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)';
     for (const [category, type, year, region, content, ref] of fresh) {
+      // 仅题干含「海关」的题已溯源为真实真题，其余一律诚实标注为模拟题
+      const isVerifiedReal = content.includes('海关');
       await conn.query(sql, [
-        content, null, category, '公共部门', '公务员', region, 'real', year,
-        type, 1, ref, JSON.stringify(['真题']), 0, null, 1, 1, null, null,
+        content, null, category, '公共部门', '公务员', region, isVerifiedReal ? 'real' : 'mock', year,
+        type, 1, ref, JSON.stringify(isVerifiedReal ? ['真题'] : ['模拟题']), 0, null, 1, 1, null, null,
       ]);
     }
     await conn.commit();
-    console.log(`[seed] 009 已导入真实真题 ${fresh.length} 道（现有题库 ${existing.size} 道）`);
+    console.log(`[seed] 009 已导入 ${fresh.length} 道（含 2 道已溯源海关真题，其余为模拟题；现有题库 ${existing.size} 道）`);
   } catch (e) {
     await conn.rollback();
     throw e;

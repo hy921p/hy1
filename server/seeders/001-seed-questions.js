@@ -1,5 +1,6 @@
 /**
  * 001 种子：面试题库 + 公务员场景 + 场景出题 prompt
+ * 题库：基础专项练习题，非公开可溯源真题，按用户要求 source_type='mock'，tags ['模拟题']。
  * 幂等：questions 表已有数据则跳过；公务员场景不存在则插入；
  *       场景 system_prompt 为 NULL 的一律补齐（可重复执行）。
  * 题型码：1社会现象 2态度观点 3组织管理 4应急应变 5人际关系 6情景模拟 7自我认知 8专业题 9开放论述
@@ -43,8 +44,8 @@ const techQuestions = [
 
 function buildQuestion({ content, ref, category, position, region, type }, createdBy) {
   return [
-    content, null, category, '公共部门', position, region, type, 1, ref,
-    JSON.stringify(['面试题']), 0, null, 1, createdBy, null, null,
+    content, null, category, '公共部门', position, region, 'mock', type, 1, ref,
+    JSON.stringify(['模拟题']), 0, null, 1, createdBy, null, null,
   ];
 }
 
@@ -65,9 +66,9 @@ async function seedQuestions() {
       rows.push(buildQuestion({ content, ref, category: '专业题', position, region, type }, 1));
     }
     const sql =
-      'INSERT INTO questions (content, detail, category, industry, position, region, type, difficulty, ' +
+      'INSERT INTO questions (content, detail, category, industry, position, region, source_type, type, difficulty, ' +
       'reference_answer, tags, usage_count, avg_score, status, created_by, deleted_at, operated_by) ' +
-      'VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)';
+      'VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)';
     for (const row of rows) {
       await conn.query(sql, row);
     }

@@ -84,7 +84,7 @@ async function realList(req, res, next) {
     const page = PAGE(req.query.page);
     const pageSize = PAGE_SIZE(req.query.pageSize);
     const { position, region } = recommendationService.resolvePositionRegion(req.user, req.query);
-    const data = await questionBankService.realList({ position, region, page, pageSize });
+    const data = await questionBankService.realList({ position, region, page, pageSize, year: req.query.year });
     return paginated(res, { list: data.list, total: data.total, page, pageSize });
   } catch (err) {
     next(err);

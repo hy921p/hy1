@@ -24,6 +24,7 @@ const router = createRouter({
         { path: 'questions/detail/:id', component: () => import('../views/questions/detail.vue') },
         { path: 'questions/hot', component: () => import('../views/questions/hot.vue') },
         { path: 'questions/real', component: () => import('../views/questions/real.vue') },
+        { path: 'questions/mock', component: () => import('../views/questions/mock.vue') },
         { path: 'questions/wrong', component: () => import('../views/questions/wrong.vue') },
         // 智学
         { path: 'learn', component: () => import('../views/learn/index.vue') },
@@ -43,6 +44,7 @@ const router = createRouter({
         { path: 'community/post/:id', component: () => import('../views/community/detail.vue') },
         // 我的
         { path: 'profile', component: () => import('../views/profile/index.vue') },
+        { path: 'profile/plan', component: () => import('../views/profile/plan.vue') },
         { path: 'profile/report', component: () => import('../views/profile/report.vue') },
         { path: 'profile/assessment', component: () => import('../views/profile/assessment.vue') },
         { path: 'profile/badges', component: () => import('../views/profile/badges.vue') },

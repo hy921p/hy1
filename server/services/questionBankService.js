@@ -37,9 +37,9 @@ async function hotList({ position, region }) {
   return questionModel.findHot(position, region, 20);
 }
 
-/** 真题列表（分页） */
-async function realList({ position, region, page, pageSize }) {
-  return questionModel.findReal(position, region, { page, pageSize });
+/** 真题列表（分页，支持按年份过滤） */
+async function realList({ position, region, page, pageSize, year }) {
+  return questionModel.findReal(position, region, { page, pageSize, year });
 }
 
 /** 题目详情（登录返回 isFavorite） */

@@ -1,8 +1,8 @@
 /**
- * 010 种子：真实真题扩充（情景模拟/专业题/开放论述 + 国考系统 + 四川省考）
- * 与 009 同源：历年国考/省考结构化面试公开真题（考生回忆公开版）+ 公开解析，
- *             仅收录题干与参考答案要点，不收录机构付费内容。
- * 幂等：按题目 content 逐题去重，可重复执行。source_type='real'。
+ * 010 种子：模拟题扩充（情景模拟/专业题/开放论述 + 国考系统 + 四川省考）
+ * 说明：本文件题目无公开可溯源来源，按用户要求诚实标注为模拟题，
+ *       source_type='mock'，tags ['模拟题']（不可标记为真题）。
+ * 幂等：按题目 content 逐题去重，可重复执行。
  * 题型码：6情景模拟 7自我认知 8专业题 9开放论述（1-5 同 009）
  */
 const { pool } = require('../models');
@@ -120,12 +120,12 @@ async function seed() {
       'VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)';
     for (const [category, type, year, region, content, ref] of fresh) {
       await conn.query(sql, [
-        content, null, category, '公共部门', '公务员', region, 'real', year,
-        type, 1, ref, JSON.stringify(['真题']), 0, null, 1, 1, null, null,
+        content, null, category, '公共部门', '公务员', region, 'mock', year,
+        type, 1, ref, JSON.stringify(['模拟题']), 0, null, 1, 1, null, null,
       ]);
     }
     await conn.commit();
-    console.log(`[seed] 010 已导入真实真题 ${fresh.length} 道（现有题库 ${existing.size} 道）`);
+    console.log(`[seed] 010 已导入模拟题 ${fresh.length} 道（现有题库 ${existing.size} 道）`);
   } catch (e) {
     await conn.rollback();
     throw e;

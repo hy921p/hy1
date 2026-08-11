@@ -73,8 +73,8 @@ function onPageChange(p: number) {
 
 const ENTRIES = [
   { icon: '🔥', title: '热点推荐', desc: '每日精选高频热点题', to: '/questions/hot' },
-  { icon: '📜', title: '历年真题', desc: '真实考场真题演练', to: '/questions/real' },
-  { icon: '🧪', title: '模拟试卷', desc: '全真模拟 · 敬请期待', to: '', soon: true },
+  { icon: '📜', title: '历年真题', desc: '真实考场真题 · 按年份分类', to: '/questions/real' },
+  { icon: '🧪', title: '模拟试卷', desc: '全真模拟练习 · 非真题', to: '/questions/mock' },
   { icon: '🎯', title: '专项练习', desc: '按题型分类专项训练', to: '', active: true },
 ]
 

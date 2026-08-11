@@ -1,15 +1,16 @@
 /**
  * 003 种子：阶段3 题库模块数据
- *  - 真题 3 道（source_type='real'，year 2025四川/2024广东/2023全国）
- *  - 模拟卷 2 道（source_type='mock'，region 四川）
+ *  - 模拟卷 5 道（source_type='mock'：3 道原真题因不可溯源降级 + 2 道模拟卷）
  *  - 情景模拟 3 道（type=6）+ 开放论述 3 道（type=9）补齐九题型
  *  - answer_10 勋章（condition_type='answer_count', value 10）按 code 查缺插
  * 幂等：按 source_type/category 的 COUNT==0 查缺插，重复执行无副作用。
  */
 const { pool } = require('../models');
 
-// 真题：[year, region, type, category, content, ref]
-const REAL_QUESTIONS = [
+// 模拟卷（source_type='mock'，诚实标注）：
+// 原「真题」3 道无公开可溯源来源 → 按用户要求降级为模拟题（year 保留仅供参考）
+// [year|null, region, type, category, content, ref]
+const MOCK_QUESTIONS = [
   [
     2025, '四川', 1, '社会现象',
     '近年来四川多地大力发展“夜间经济”，但也随之出现摊位扰民、垃圾乱扔、噪音扰民等问题。对此你怎么看？',
@@ -25,17 +26,13 @@ const REAL_QUESTIONS = [
     '你正在组织一场大型现场招聘会，开场不久现场人群拥挤，出现踩踏隐患，你怎么办？',
     '第一时间启动应急预案：引导疏散、拉开人流、暂停入口放行并广播安抚，联系安保与医务支援，必要时暂停活动并转移至安全区域，事后排查原因、完善现场管控与应急预案。',
   ],
-];
-
-// 模拟卷：[type, category, content, ref]
-const MOCK_QUESTIONS = [
   [
-    3, '组织管理',
+    null, '四川', 3, '组织管理',
     '（模拟卷）单位要开展一次青年干部“我为群众办实事”岗位练兵活动，请你策划具体方案。',
     '围绕“服务一线、锤炼本领”确定活动形式（跟班服务、轮岗体验、结对帮扶），做好组织动员、过程指导、效果评比与典型宣传，突出参与度与实际成效。',
   ],
   [
-    4, '应急应变',
+    null, '四川', 4, '应急应变',
     '（模拟卷）你在窗口值班时，突遇系统故障无法办理业务，群众排队等候且情绪焦躁，你怎么办？',
     '立即安抚现场并说明情况，启动手工登记与预约改期通道，及时报修并跟进修复进度，向等候群众发放序号与后续办理指引，事后总结完善应急预案。',
   ],
@@ -97,20 +94,6 @@ function buildRow({ content, ref, category, position, region, type, sourceType, 
   ];
 }
 
-async function seedReal(conn) {
-  const [rows] = await conn.query("SELECT COUNT(*) AS c FROM questions WHERE source_type = 'real'");
-  if (rows[0].c > 0) {
-    console.log('[seed] real 真题已有数据，跳过');
-    return;
-  }
-  const data = [];
-  for (const [year, region, type, category, content, ref] of REAL_QUESTIONS) {
-    data.push(buildRow({ content, ref, category, position: '公务员', region, type, sourceType: 'real', year }));
-  }
-  await insertQuestions(conn, data);
-  console.log(`[seed] 已插入 ${data.length} 道真题（real）`);
-}
-
 async function seedMock(conn) {
   const [rows] = await conn.query("SELECT COUNT(*) AS c FROM questions WHERE source_type = 'mock'");
   if (rows[0].c > 0) {
@@ -118,8 +101,8 @@ async function seedMock(conn) {
     return;
   }
   const data = [];
-  for (const [type, category, content, ref] of MOCK_QUESTIONS) {
-    data.push(buildRow({ content, ref, category, position: '公务员', region: '四川', type, sourceType: 'mock' }));
+  for (const [year, region, type, category, content, ref] of MOCK_QUESTIONS) {
+    data.push(buildRow({ content, ref, category, position: '公务员', region, type, sourceType: 'mock', year }));
   }
   await insertQuestions(conn, data);
   console.log(`[seed] 已插入 ${data.length} 道模拟题（mock）`);
@@ -170,7 +153,6 @@ async function seed() {
   const conn = await pool.getConnection();
   try {
     await conn.beginTransaction();
-    await seedReal(conn);
     await seedMock(conn);
     await seedScenarios(conn);
     await seedOpen(conn);

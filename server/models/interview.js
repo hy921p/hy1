@@ -237,12 +237,16 @@ const questionModel = {
     ];
   },
 
-  /** 真题列表（source_type='real'，年份倒序，三级回退 + 分页） */
-  async findReal(position, region, { page = 1, pageSize = 10 } = {}) {
-    const where =
+  /** 真题列表（source_type='real'，年份倒序，可按 year 过滤，三级回退 + 分页） */
+  async findReal(position, region, { page = 1, pageSize = 10, year } = {}) {
+    let where =
       'status = 1 AND deleted_at IS NULL AND source_type = "real" AND ' +
       '((position = ? AND region = ?) OR (position = ? AND (region = "全国" OR region IS NULL)) OR (position IS NULL OR position = "通用" OR position = "公务员"))';
     const params = [position, region, position];
+    if (year) {
+      where += ' AND year = ?';
+      params.push(Number(year));
+    }
     const offset = (page - 1) * pageSize;
     const [[totalRow], list] = await Promise.all([
       query(`SELECT COUNT(*) AS c FROM questions WHERE ${where}`, params),
