@@ -74,7 +74,6 @@ onMounted(load)
         </div>
 
         <PlanPath
-          :plan="plan.plan"
           :nodes="plan.nodes"
           :total="plan.total"
           :completed="plan.completed"

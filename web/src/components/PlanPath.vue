@@ -5,7 +5,6 @@ import { ElMessage } from 'element-plus'
 import { completeNode } from '../api/studyPlan'
 
 const props = defineProps<{
-  plan: any
   nodes: any[]
   total: number
   completed: number
@@ -32,8 +31,7 @@ async function doComplete(node: any) {
 <template>
   <div class="plan">
     <div class="plan-head">
-      <span class="plan-name">{{ plan?.name || '我的学习规划' }}</span>
-      <span class="plan-count">{{ completed }} / {{ total }}</span>
+      <span class="plan-count">已完成 {{ completed }} / {{ total }} 个节点</span>
     </div>
     <el-progress :percentage="progress" :stroke-width="10" class="plan-bar" />
 
@@ -60,10 +58,6 @@ async function doComplete(node: any) {
   justify-content: space-between;
   align-items: center;
   margin-bottom: 6px;
-}
-.plan-name {
-  font-weight: 600;
-  color: #303133;
 }
 .plan-count {
   font-size: 12px;
