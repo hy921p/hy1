@@ -3,8 +3,24 @@
 # 用法：bash scripts/deploy.sh [域名]
 #   - 无参数：仅启动（http://<IP>/）
 #   - 传域名：启动后自动签发 HTTPS（certbot --nginx）
+#   - bash scripts/deploy.sh rollback <备份文件>：回滚（先恢复 DB 备份再重建服务）
 set -euo pipefail
 cd "$(dirname "$0")/.."
+
+# 0) 回滚：恢复数据库备份 + 重建服务（代码回滚请先 git checkout/reset 到目标版本再执行本命令）
+if [ "${1:-}" = "rollback" ]; then
+  BACKUP="${2:-}"
+  if [ -z "${BACKUP}" ] || [ ! -f "${BACKUP}" ]; then
+    echo "❌ 用法: bash scripts/deploy.sh rollback <备份文件>（如 backups/ai_interview_coach_20260812_030000.sql.gz）"
+    exit 1
+  fi
+  echo "⚠️  回滚流程：先恢复数据库备份，再重建并重启服务…"
+  bash scripts/restore.sh "${BACKUP}"
+  docker compose build
+  docker compose up -d
+  echo "✅ 回滚完成：${BACKUP}"
+  exit 0
+fi
 
 # 1) 准备 .env
 if [ ! -f .env ]; then

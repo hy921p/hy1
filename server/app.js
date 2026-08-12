@@ -8,6 +8,7 @@ const fileUpload = require('express-fileupload');
 const path = require('path');
 const config = require('./config');
 const logger = require('./utils/logger');
+const requestLogger = require('./utils/requestLogger');
 const { success } = require('./utils/response');
 const errorHandler = require('./middleware/error-handler');
 const { pool } = require('./models');
@@ -30,20 +31,29 @@ app.use(fileUpload({ limits: { fileSize: 10 * 1024 * 1024 } }));
 // 静态资源（上传文件）
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-// 请求日志
-app.use((req, res, next) => {
-  logger.debug(`${req.method} ${req.path}`);
-  next();
-});
+// 请求日志（写文件，供 analyze-logs.sh 分析 / 巡检，fail-open 不影响业务）
+app.use(requestLogger);
 
-// 健康检查（含数据库连通性探测）
+// 健康检查（含数据库连通性 + 进程状态，供巡检/监控探活）
 app.get('/api/v1/health', async (req, res, next) => {
   try {
     await pool.query('SELECT 1');
-    return success(res, { status: 'ok', db: true, timestamp: Date.now() }, 'success');
+    return success(res, {
+      status: 'ok',
+      db: true,
+      uptime: Math.floor(process.uptime()),
+      rss: process.memoryUsage().rss,
+      timestamp: Date.now(),
+    }, 'success');
   } catch (err) {
     logger.error('health check db failed', err.message);
-    return success(res, { status: 'degraded', db: false, timestamp: Date.now() }, '数据库不可用');
+    return success(res, {
+      status: 'degraded',
+      db: false,
+      uptime: Math.floor(process.uptime()),
+      rss: process.memoryUsage().rss,
+      timestamp: Date.now(),
+    }, '数据库不可用');
   }
 });
 
