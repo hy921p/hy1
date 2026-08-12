@@ -201,4 +201,57 @@ npm run test:all    # 准备隔离测试库 + 跑全部用例（单元 8 + 集�
 ```
 
 ---
-*版本 v1.0 · 配套阶段 6 运维能力增强（巡检/日志/备份回滚/测试）*
+
+## 11. 开发工作流（日常改代码 → 同步 → 部署）
+
+> 铁律两条：
+> 1. **每次改完，先 `npm run test:all` 跑绿再同步**，改坏了立刻知道；
+> 2. **服务器只 git pull，不直接在服务器上改代码**——本地是唯一修改入口。
+
+### 11.1 完整流程（改一个小功能）
+
+```bash
+# ① 本地改代码（分层落点见 11.2）
+# ② 回归
+cd server && npm run test:all          # 后端 35 条用例，必须全绿
+cd ../web  && npx vue-tsc --noEmit      # 改了 C 端前端就检查
+cd ../admin && npx vue-tsc --noEmit     # 改了管理端就检查
+# ③ 提交并推送
+git add -A
+git commit -m "feat/fix: 一句话描述"
+git push origin main                     # 本地能连 GitHub 时
+# ④ 服务器部署
+ssh root@47.109.179.18
+cd /root/ai-zhimian && git pull && bash scripts/deploy.sh
+# ⑤ 验证
+curl -s http://localhost/api/v1/health
+```
+
+### 11.2 分层改动落点（每个改动去哪）
+
+| 想做什么 | 改哪里 | 注意 |
+|---|---|---|
+| 加后端接口 | `server/routes/*.js` 加行 → `server/controllers/*.js` 加薄函数 → `server/services/*.js` 写逻辑 | controller 只做取参/包装，逻辑全在 service |
+| 改表结构 | `server/migrations/` 新建 `012-xxx.js` → `cd server && npm run migrate` | 迁移幂等，可反复跑；不要改已提交的旧迁移 |
+| 改种子/题库 | `server/seeders/` → `npm run seed` | 幂等去重 |
+| 改 C 端页面 | `web/src/views/` + `web/src/api/` + `web/src/router/` | 改完跑 vue-tsc |
+| 改管理端 | `admin/src/views/` + `admin/src/api/` | 同上 |
+| 改 AI/Agent 逻辑 | `server/services/{aiService,agentService,ragService,embeddingService}.js` | **最复杂**，改完必跑测试；注意降级链（远程→哈希）别打断 |
+
+### 11.3 三个环境各自的坑
+
+- **本地（Windows）**：内存 ~1GB，**一次只启动一个服务**（防 esbuild OOM）；启动后端用 `cd server && node index.js`，改完先 `kill` 再起，否则 `EADDRINUSE`。
+- **服务器（ECS 2G）**：VECTOR_MODE=mysql（跑不动 Qdrant）；不要在上面装大依赖；`apt install jq` 给日志分析用。
+- **git**：本地与服务器是**同一份远程历史**，别在本地乱 `rebase`/`reset --hard`（会像之前一样历史分叉）；一律 `pull` 别人，`push` 自己。
+
+### 11.4 发版前 Checklist
+
+- [ ] `npm run test:all` 全绿（后端）
+- [ ] 改前端的两个端 `vue-tsc --noEmit` 通过
+- [ ] 0前端.docx 等非代码文件没有误提交
+- [ ] `git push` 成功后服务器 `git pull` 无冲突
+- [ ] `curl /api/v1/health` 返回 ok + db:true
+- [ ] 必要时跑一次 `bash scripts/backup.sh` 留个上线前备份
+
+---
+*版本 v1.1 · 配套阶段 6 运维能力增强（巡检/日志/备份回滚/测试）+ 开发工作流*
