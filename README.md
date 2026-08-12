@@ -75,14 +75,19 @@ bash scripts/deploy.sh 你的域名     # 启动并自动签发 HTTPS（certbot�
 ```
 AIzhimian/
 ├── server/            # Express 后端（controllers/services/models/routes/middleware）
-│   ├── migrations/    # 011 个幂等迁移（含 RAG 与 Agent 表）
-│   ├── seeders/       # 008 个种子（含知识库重建与 Agent 工具注册）
-│   └── scripts/       # run-migrations / run-seeders / rebuild-knowledge
+│   ├── migrations/    # 012 个幂等迁移（含 RAG 与 Agent 表）
+│   ├── seeders/       # 010 个种子（含知识库重建与 Agent 工具注册）
+│   ├── __tests__/     # 自动化测试（单元 + 集成，跑隔离测试库）
+│   ├── jest.setup.js  # 测试库隔离（dotenv 不覆盖已存在 env）
+│   ├── logs/          # 访问/错误日志（不入 git，按天分文件、14 天轮转）
+│   └── scripts/       # run-migrations / run-seeders / rebuild-knowledge / setup-test-db
 ├── web/               # C 端（Vue3 + Element Plus + Vite）
 ├── admin/             # 管理端（Vue3 + Ant Design Vue 4 + Vite）
 ├── nginx/             # 网关配置（多阶段构建 + 反代 + HTTPS 说明）
 ├── docker-compose.yml        # 生产编排
-├── scripts/deploy.sh         # 一键部署
+├── scripts/           # 运维脚本：deploy / backup / restore / inspect / analyze-logs
+├── TEST_CASES.md      # 测试用例文档（单元 8 + 集成 32，含缺陷排查实录）
+├── OPS.md             # 运维手册（巡检/日志/备份回滚/开发工作流）
 └── 1AI智面平台技术文档__SDD.md # 技术文档（SDD，含 RAG §10.2 / Agent §10.3 设计）
 ```
 
@@ -90,11 +95,12 @@ AIzhimian/
 
 `AI_API_KEY`（DeepSeek，必填）· `DB_*` / `MYSQL_ROOT_PASSWORD` · `JWT_SECRET` / `ADMIN_JWT_SECRET` · `EMBEDDING_*`（DashScope + 降级）· `VECTOR_MODE` / `QDRANT_*` · `AGENT_ENABLED` / `AGENT_MAX_TOOL_CALLS`
 
-## ✅ 质量
+## ✅ 质量与运维
 
-- 后端 Jest 单测 **138 个用例全过**；端到端流程 19/19 通过
-- 双前端 `vue-tsc --noEmit` 零类型错误
+- **自动化测试**：Jest + Supertest **35 条用例全过**（单元 8 + 集成 32），跑在**独立测试库** `ai_interview_coach_test`，不污染生产数据；AI 端点全 mock，零调用成本
+- 双前端 `vue-tsc --noEmit` 零类型错误；端到端流程 19/19 通过
 - 关键链路均有降级与兜底（AI 超时重试、RAG 降级、Agent 回退 V1.0、工具日志 fail-open）
+- **运维**：请求级 JSON 日志（按天轮转 14 天 + `jq` 日志分析）、健康巡检（uptime / rss / DB 连通 + 巡检脚本 + crontab）、MySQL 定时备份 + 一键回滚（`deploy.sh rollback`）——详见 [OPS.md](OPS.md) 与 [TEST_CASES.md](TEST_CASES.md)
 
 ## 📄 许可
 
