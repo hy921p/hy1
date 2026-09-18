@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 300" width="520" height="300" fill="none">
+  <!-- 精品题库：三层书本 + 钢笔 + 星光 -->
+  <circle cx="452" cy="52" r="26" fill="#F7BA2A" opacity="0.9"/>
+  <circle cx="452" cy="52" r="10" fill="#FFFFFF" opacity="0.35"/>
+  <circle cx="60" cy="258" r="20" fill="#91B3E8" opacity="0.5"/>
+  <circle cx="480" cy="240" r="14" fill="#FFFFFF" opacity="0.25"/>
+
+  <!-- 最上层书本（金色封面） -->
+  <g transform="rotate(-6 260 150)">
+    <rect x="190" y="120" width="150" height="26" rx="4" fill="#F7BA2A"/>
+    <rect x="198" y="124" width="134" height="18" rx="3" fill="#FFF4D6"/>
+    <rect x="216" y="130" width="26" height="6" rx="3" fill="#F7BA2A"/>
+    <rect x="252" y="130" width="34" height="6" rx="3" fill="#E8D48F"/>
+  </g>
+  <!-- 中间书本（浅蓝封面） -->
+  <g transform="rotate(4 260 178)">
+    <rect x="176" y="162" width="170" height="30" rx="4" fill="#91B3E8"/>
+    <rect x="184" y="167" width="154" height="20" rx="3" fill="#EAF2FF"/>
+    <rect x="206" y="173" width="30" height="8" rx="4" fill="#6595DF"/>
+    <rect x="248" y="173" width="38" height="8" rx="4" fill="#C7D8F7"/>
+  </g>
+  <!-- 最下书本（深蓝封面） -->
+  <g transform="rotate(-3 260 208)">
+    <rect x="168" y="198" width="190" height="34" rx="4" fill="#174DA6"/>
+    <rect x="176" y="203" width="174" height="24" rx="3" fill="#EAF2FF"/>
+    <rect x="206" y="210" width="26" height="9" rx="4.5" fill="#174DA6"/>
+    <rect x="242" y="210" width="42" height="9" rx="4.5" fill="#7FA8E8"/>
+  </g>
+
+  <!-- 钢笔 -->
+  <g transform="rotate(38 420 236)">
+    <rect x="404" y="168" width="26" height="66" rx="8" fill="#FFFFFF"/>
+    <rect x="404" y="186" width="26" height="26" fill="#174DA6"/>
+    <path d="M410 236 L417 250 L421 250 L428 236 Z" fill="#2E5CB8"/>
+    <circle cx="417" cy="196" r="3" fill="#F7BA2A"/>
+  </g>
+
+  <!-- 星光 -->
+  <path d="M96 96 l3 8 8 3 -8 3 -3 8 -3 -8 -8 -3 8 -3 Z" fill="#FFFFFF" opacity="0.8"/>
+  <path d="M360 60 l2.5 6 6 2.5 -6 2.5 -2.5 6 -2.5 -6 -6 -2.5 6 -2.5 Z" fill="#FFFFFF" opacity="0.7"/>
+  <path d="M440 128 l2 5 5 2 -5 2 -2 5 -2 -5 -5 -2 5 -2 Z" fill="#FFFFFF" opacity="0.5"/>
+</svg>

@@ -1,0 +1,9 @@
+node_modules/
+.npm/
+.env
+.env.local
+.claude/settings.local.json
+.DS_Store
+*.log
+dist/
+.tmp/

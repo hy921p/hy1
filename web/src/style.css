@@ -1,0 +1,44 @@
+/* 全局主题：参考「乾途国培」深海军蓝 + 浅灰蓝背景的设计语言 */
+:root {
+  /* 品牌色 */
+  --app-primary: #2367d1;
+  --app-primary-deep: #102c5c;
+  --app-primary-mid: #174da6;
+  --app-bg: #f5f7fb;
+  --app-card-border: #dfe5ef;
+  --app-accent: #f95724;
+  --app-gold: #f7ba2a;
+  --app-green: #10b981;
+
+  /* 覆盖 Element Plus 主色（按钮/链接/tag/进度条/日历全局换色） */
+  --el-color-primary: #2367d1;
+  --el-color-primary-light-3: #6595df;
+  --el-color-primary-light-5: #91b3e8;
+  --el-color-primary-light-7: #bdd1f1;
+  --el-color-primary-light-8: #c7e1f6;
+  --el-color-primary-light-9: #e9f0fa;
+  --el-color-primary-dark-2: #1c52a7;
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+  background: var(--app-bg);
+  color: #1f2d3d;
+}
+
+#app {
+  min-height: 100vh;
+}
+
+/* 全局卡片：白底、浅边框、大圆角（参考站 bento-card） */
+.el-card {
+  border-radius: 16px;
+  border: 1px solid var(--app-card-border);
+  background: #fff;
+}
+
+/* 全局按钮圆角收敛 */
+.el-button {
+  border-radius: 8px;
+}

@@ -1,0 +1,12 @@
+# AI 智面 · 网关镜像（轻量版，生产 1.6G 内存专用）
+# 服务器跑不动 nginx/Dockerfile 里的两段 vite build（会 OOM 拖死 sshd，需重启 ECS），
+# 因此 web/admin 的 dist 在本地 `npm run build` 后随源码一起同步上传，这里只做 COPY。
+#
+# 本地构建 → 上传 → 服务器执行：
+#   docker build -t ai-zhimian-nginx -f nginx/Dockerfile.lite .
+#   docker compose up -d            # 不带 --build，镜像 tag 变化会重建 nginx 容器
+FROM nginx:alpine
+COPY nginx/nginx.conf /etc/nginx/conf.d/default.conf
+COPY web/dist /usr/share/nginx/html/web
+COPY admin/dist /usr/share/nginx/html/admin
+EXPOSE 80 443

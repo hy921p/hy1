@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 300" width="520" height="300" fill="none">
+  <!-- 每日晨读：翻开书 + 朝阳 + 星光 -->
+  <circle cx="452" cy="60" r="30" fill="#FFFFFF" opacity="0.25"/>
+  <circle cx="452" cy="60" r="14" fill="#FFFFFF" opacity="0.35"/>
+
+  <!-- 朝阳 -->
+  <circle cx="420" cy="150" r="52" fill="#F7BA2A" opacity="0.95"/>
+  <g stroke="#FFFFFF" stroke-width="7" stroke-linecap="round" opacity="0.75">
+    <line x1="420" y1="70" x2="420" y2="88"/>
+    <line x1="420" y1="212" x2="420" y2="230"/>
+    <line x1="340" y1="150" x2="358" y2="150"/>
+    <line x1="482" y1="150" x2="500" y2="150"/>
+    <line x1="358" y1="88" x2="370" y2="100"/>
+    <line x1="470" y1="200" x2="482" y2="212"/>
+    <line x1="470" y1="100" x2="482" y2="88"/>
+    <line x1="358" y1="212" x2="370" y2="200"/>
+  </g>
+
+  <!-- 翻开书 -->
+  <path d="M120 210 C168 168 212 168 260 196 L260 120 C212 150 168 150 120 118 Z" fill="#FFFFFF"/>
+  <path d="M260 196 C308 168 352 168 400 210 L400 118 C352 150 308 150 260 120 Z" fill="#FFF1D6"/>
+  <line x1="260" y1="120" x2="260" y2="196" stroke="#F0C47C" stroke-width="5" stroke-linecap="round"/>
+
+  <!-- 书页字行 -->
+  <g fill="#E8D48F">
+    <rect x="196" y="164" width="36" height="6" rx="3"/>
+    <rect x="196" y="180" width="46" height="6" rx="3"/>
+  </g>
+  <g fill="#F0C47C">
+    <rect x="298" y="162" width="46" height="6" rx="3"/>
+    <rect x="298" y="178" width="36" height="6" rx="3"/>
+  </g>
+
+  <!-- 星光 -->
+  <path d="M96 96 l3 8 8 3 -8 3 -3 8 -3 -8 -8 -3 8 -3 Z" fill="#FFFFFF" opacity="0.85"/>
+  <path d="M360 60 l2.5 6 6 2.5 -6 2.5 -2.5 6 -2.5 -6 -6 -2.5 6 -2.5 Z" fill="#FFFFFF" opacity="0.7"/>
+  <path d="M440 128 l2 5 5 2 -5 2 -2 5 -2 -5 -5 -2 5 -2 Z" fill="#FFFFFF" opacity="0.5"/>
+</svg>

@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 300" width="520" height="300" fill="none">
+  <!-- AI 模拟面试：麦克风 + 声波 -->
+  <circle cx="452" cy="52" r="26" fill="#FFFFFF" opacity="0.22"/>
+  <circle cx="452" cy="52" r="12" fill="#FFFFFF" opacity="0.3"/>
+  <circle cx="70" cy="258" r="18" fill="#FFFFFF" opacity="0.16"/>
+  <circle cx="492" cy="244" r="14" fill="#FFFFFF" opacity="0.2"/>
+
+  <!-- 麦克风头 -->
+  <rect x="243" y="64" width="58" height="88" rx="29" fill="#FFFFFF"/>
+  <rect x="260" y="80" width="24" height="40" rx="12" fill="#1EA8E7" opacity="0.55"/>
+  <!-- 麦克风支臂 -->
+  <rect x="262" y="152" width="20" height="66" rx="10" fill="#FFFFFF" opacity="0.9"/>
+  <!-- 底座 -->
+  <ellipse cx="272" cy="228" rx="52" ry="14" fill="#FFFFFF" opacity="0.9"/>
+  <ellipse cx="272" cy="224" rx="52" ry="14" fill="#DFF3FC"/>
+
+  <!-- 声波弧线 -->
+  <path d="M196 96 a58 58 0 0 1 0 76" stroke="#FFFFFF" stroke-width="8" stroke-linecap="round" opacity="0.9"/>
+  <path d="M170 74 a96 96 0 0 1 0 120" stroke="#FFFFFF" stroke-width="6" stroke-linecap="round" opacity="0.55"/>
+  <path d="M356 98 a62 62 0 0 0 0 78" stroke="#FFFFFF" stroke-width="8" stroke-linecap="round" opacity="0.9"/>
+  <path d="M386 76 a98 98 0 0 0 0 124" stroke="#FFFFFF" stroke-width="6" stroke-linecap="round" opacity="0.55"/>
+
+  <!-- 星光 -->
+  <path d="M96 96 l3 8 8 3 -8 3 -3 8 -3 -8 -8 -3 8 -3 Z" fill="#FFFFFF" opacity="0.8"/>
+  <path d="M360 60 l2.5 6 6 2.5 -6 2.5 -2.5 6 -2.5 -6 -6 -2.5 6 -2.5 Z" fill="#FFFFFF" opacity="0.7"/>
+  <path d="M440 128 l2 5 5 2 -5 2 -2 5 -2 -5 -5 -2 5 -2 Z" fill="#FFFFFF" opacity="0.5"/>
+</svg>
