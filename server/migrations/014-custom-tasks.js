@@ -12,6 +12,7 @@ async function up() {
       \`user_id\` INT UNSIGNED NOT NULL COMMENT '所属用户',
       \`title\` VARCHAR(120) NOT NULL COMMENT '任务标题',
       \`est_minutes\` INT UNSIGNED NULL DEFAULT NULL COMMENT '预计耗时（分钟，可空）',
+      \`is_default\` TINYINT NOT NULL DEFAULT 0 COMMENT '1=系统默认任务 0=用户自建',
       \`status\` TINYINT NOT NULL DEFAULT 0 COMMENT '0待办 1已完成',
       \`created_at\` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
       \`finished_at\` DATETIME NULL DEFAULT NULL,

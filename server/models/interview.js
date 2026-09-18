@@ -101,11 +101,14 @@ const sessionModel = {
   /** 进行中超时待自动收尾的会话：状态仍为 1（进行中），且距最近一条消息（无消息用开始时刻）超过 idleMinutes 分钟 */
   async listIdleInProgress(idleMinutes) {
     return query(
+      // s.started_at 必须进 GROUP BY：HAVING 里引用未分组列时，
+      // MySQL 8 在 ONLY_FULL_GROUP_BY 下会报 1054「Unknown column 's.started_at' in 'having clause'」，
+      // 生产上表现为「自动收尾扫描失败」刷屏、30 分钟无作答的面试永远不收尾。
       `SELECT s.id, s.user_id
        FROM interview_sessions s
        LEFT JOIN interview_messages m ON m.session_id = s.id
        WHERE s.status = 1
-       GROUP BY s.id, s.user_id
+       GROUP BY s.id, s.user_id, s.started_at
        HAVING COALESCE(MAX(m.created_at), s.started_at) < NOW() - INTERVAL ? MINUTE`,
       [Number(idleMinutes)],
     );
